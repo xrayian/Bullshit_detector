@@ -131,12 +131,12 @@
     const controls = card.querySelector(".bs-controls");
 
     badge.style.position = "relative";
-    if (controls) {
+    if (controls && controls.parentNode === card) {
       card.insertBefore(badge, controls);
-    } else if (insertBefore) {
+    } else if (insertBefore && insertBefore.parentNode === card) {
       card.insertBefore(badge, insertBefore);
     } else {
-      card.appendChild(badge);
+      card.prepend(badge);
     }
   }
 
@@ -219,10 +219,10 @@
 
     controls.appendChild(btn);
 
-    if (insertBefore) {
+    if (insertBefore && insertBefore.parentNode === card) {
       card.insertBefore(controls, insertBefore);
-    } else if (textEl && textEl.parentElement) {
-      textEl.parentElement.insertBefore(controls, textEl.nextSibling);
+    } else if (textEl && textEl.parentNode) {
+      textEl.parentNode.insertBefore(controls, textEl.nextSibling);
     } else {
       card.appendChild(controls);
     }
