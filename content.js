@@ -183,6 +183,19 @@
     return false;
   }
 
+  function isInsideChat(element) {
+    let el = element;
+    for (let i = 0; i < 15 && el; i++) {
+      const role = el.getAttribute && el.getAttribute("role");
+      const label = el.getAttribute && el.getAttribute("aria-label");
+      if (role === "log") return true;
+      if (role === "grid" && label && /messages/i.test(label)) return true;
+      if (label && /messages in conversation|^messages$/i.test(label.trim())) return true;
+      el = el.parentElement;
+    }
+    return false;
+  }
+
   function findPostContainer(element) {
     for (const sel of siteConfig.postSelectors) {
       const match = element.closest(sel);
@@ -263,7 +276,7 @@
 
     for (const sel of siteConfig.postSelectors) {
       document.querySelectorAll(sel).forEach((el) => {
-        if (isInsideCommentsSection(el)) return;
+        if (isInsideCommentsSection(el) || isInsideChat(el)) return;
         const card = findPostContainer(el);
         if (!card || seen.has(card)) return;
         seen.add(card);
@@ -276,7 +289,7 @@
       document.querySelectorAll('button[aria-label], [role="button"][aria-label]').forEach((btn) => {
         const label = (btn.getAttribute("aria-label") || "").toLowerCase();
         if (!siteConfig.actionLabels.some((l) => label.includes(l))) return;
-        if (isInsideCommentsSection(btn)) return;
+        if (isInsideCommentsSection(btn) || isInsideChat(btn)) return;
         const card = walkUpToCard(btn);
         if (!card || seen.has(card)) return;
         seen.add(card);
