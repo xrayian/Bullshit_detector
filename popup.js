@@ -1,10 +1,27 @@
-const ICONS = {
-  ready: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1 1 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>',
-  error: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>',
-  checking: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
-  eye: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/><circle cx="12" cy="12" r="3"/></svg>',
-  eyeOff: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" x2="22" y1="2" y2="22"/></svg>',
+const STATUS_ICONS = {
+  ready: "shieldCheck",
+  error: "alert",
+  checking: "loader",
 };
+
+function iconSvg(key) {
+  return (window.BS_ICONS && window.BS_ICONS[key]) || "";
+}
+
+function mountIcons() {
+  document.querySelectorAll("[data-icon]").forEach((el) => {
+    const src = iconSvg(el.dataset.icon);
+    if (!src) return;
+    const innerStart = src.indexOf(">") + 1;
+    const innerEnd = src.lastIndexOf("</svg>");
+    el.setAttribute("viewBox", "0 0 24 24");
+    el.setAttribute("fill", "none");
+    el.setAttribute("stroke", "currentColor");
+    el.setAttribute("stroke-width", "1.5");
+    el.setAttribute("aria-hidden", "true");
+    el.innerHTML = src.slice(innerStart, innerEnd);
+  });
+}
 
 const MODEL_PRESETS = [
   "gemini-3.7-flash",
@@ -24,6 +41,8 @@ const MODEL_PRESETS = [
 ];
 
 document.addEventListener("DOMContentLoaded", async () => {
+  mountIcons();
+
   const statusIcon = document.getElementById("statusIcon");
   const statusText = document.getElementById("statusText");
   const settingsToggle = document.getElementById("settingsToggle");
@@ -44,11 +63,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     settingsArrow.classList.toggle("rotated", isOpen);
   });
 
-  keyToggle.innerHTML = ICONS.eye;
+  keyToggle.innerHTML = iconSvg("eye");
   keyToggle.addEventListener("click", () => {
     const show = apiKeyInput.type === "password";
     apiKeyInput.type = show ? "text" : "password";
-    keyToggle.innerHTML = show ? ICONS.eyeOff : ICONS.eye;
+    keyToggle.innerHTML = show ? iconSvg("eyeOff") : iconSvg("eye");
     keyToggle.setAttribute("aria-label", show ? "Hide API key" : "Show API key");
   });
 
@@ -118,7 +137,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   function setStatus(state, text) {
     statusIcon.className = "status-icon " + state;
-    statusIcon.innerHTML = ICONS[state] || "";
+    statusIcon.innerHTML = iconSvg(STATUS_ICONS[state] || "");
     statusText.textContent = text;
   }
 

@@ -9,11 +9,7 @@
 <body>
   <div class="popup-container">
     <header class="header">
-      <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="m12 14 4-4"/>
-        <path d="M3.34 19a10 10 0 1 1 17.32 0"/>
-        <circle cx="12" cy="12" r="3" fill="currentColor" stroke="none"/>
-      </svg>
+      <svg class="brand-icon" data-icon="smell"></svg>
       <div class="brand-text">
         <h1 class="title">BS Detector</h1>
         <p class="subtitle">Social media caption BS detector</p>
@@ -27,51 +23,26 @@
 
     <button class="settings-toggle" id="settingsToggle" aria-expanded="false">
       <span class="settings-label">
-        <svg class="toggle-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
-          <circle cx="12" cy="12" r="3"/>
-        </svg>
+        <svg class="toggle-icon" data-icon="cog"></svg>
         Settings
       </span>
-      <svg class="arrow" id="settingsArrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <path d="m6 9 6 6 6-6"/>
-      </svg>
+      <svg class="arrow" id="settingsArrow" data-icon="chevron"></svg>
     </button>
 
     <div class="settings-body hidden" id="settingsBody">
       <div class="setting">
         <span class="setting-label">Gemini API Key</span>
         <div class="input-wrap">
-          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/>
-            <path d="m21 2-9.6 9.6"/>
-            <circle cx="7.5" cy="15.5" r="5.5"/>
-          </svg>
+          <svg class="input-icon" data-icon="key"></svg>
           <input type="password" id="apiKey" placeholder="AIza..." autocomplete="off" />
-          <button id="keyToggle" class="icon-btn" type="button" aria-label="Show API key">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M2.06 12.35a1 1 0 0 1 0-.7 10.75 10.75 0 0 1 19.88 0 1 1 0 0 1 0 .7 10.75 10.75 0 0 1-19.88 0"/>
-              <circle cx="12" cy="12" r="3"/>
-            </svg>
-          </button>
+          <button id="keyToggle" class="icon-btn" type="button" aria-label="Show API key"></button>
         </div>
       </div>
 
       <div class="setting">
         <span class="setting-label">Model</span>
         <div class="input-wrap">
-          <svg class="input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect width="16" height="16" x="4" y="4" rx="2"/>
-            <rect width="6" height="6" x="9" y="9" rx="1"/>
-            <path d="M15 2v2"/>
-            <path d="M15 20v2"/>
-            <path d="M2 15h2"/>
-            <path d="M2 9h2"/>
-            <path d="M20 15h2"/>
-            <path d="M20 9h2"/>
-            <path d="M9 2v2"/>
-            <path d="M9 20v2"/>
-          </svg>
+          <svg class="input-icon" data-icon="cpu"></svg>
           <select id="modelSelect">
             <option value="gemini-3.7-flash">gemini-3.7-flash</option>
             <option value="gemini-3.6-flash">gemini-3.6-flash</option>
@@ -89,19 +60,14 @@
             <option value="gemini-omni-flash-preview">gemini-omni-flash-preview</option>
             <option value="__custom__">Custom…</option>
           </select>
+          <svg class="select-caret" data-icon="chevron"></svg>
         </div>
         <input type="text" id="modelCustom" class="custom-model hidden" placeholder="gemini-..." autocomplete="off" />
       </div>
 
       <div class="setting cache-row">
         <button id="clearCacheBtn" class="btn-ghost" type="button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M3 6h18"/>
-            <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
-            <line x1="10" x2="10" y1="11" y2="17"/>
-            <line x1="14" x2="14" y1="11" y2="17"/>
-          </svg>
+          <svg data-icon="trash"></svg>
           Clear cache
         </button>
         <span id="cacheCount" class="cache-count">0 rated</span>
@@ -115,6 +81,7 @@
       <span>v4.1.0</span>
     </footer>
   </div>
+  <script src="icons.js"></script>
   <script src="popup.js"></script>
 </body>
 </html>

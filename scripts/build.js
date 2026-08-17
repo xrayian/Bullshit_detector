@@ -11,6 +11,7 @@ fs.mkdirSync(distDir, { recursive: true });
 
 const filesToCopy = [
   "background.js",
+  "icons.js",
   "content.js",
   "popup.html",
   "popup.js",

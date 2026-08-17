@@ -5,13 +5,18 @@
   const MIN_TEXT = 15;
   const DEBOUNCE_MS = 200;
 
-  // ── Icon library (lucide-style) ───────────────────────────────
+  // ── Icon library (from heroicons npm package via icons.js) ───
+
+  function withIconClass(svg, extra = "") {
+    const cls = ["bs-btn-icon", extra].filter(Boolean).join(" ");
+    return (svg || "").replace("<svg ", `<svg class="${cls}" `);
+  }
 
   const ICONS = {
-    gauge: '<svg class="bs-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>',
-    zap: '<svg class="bs-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
-    undo: '<svg class="bs-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5 5.5 5.5 0 0 1-5.5 5.5H11"/></svg>',
-    loader: '<svg class="bs-btn-icon bs-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
+    gauge: withIconClass(window.BS_ICONS && window.BS_ICONS.smell),
+    zap: withIconClass(window.BS_ICONS && window.BS_ICONS.zap),
+    undo: withIconClass(window.BS_ICONS && window.BS_ICONS.undo),
+    loader: withIconClass(window.BS_ICONS && window.BS_ICONS.loader, "bs-spin"),
   };
 
   // ── Theme detection ───────────────────────────────────────────

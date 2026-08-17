@@ -1,0 +1,26 @@
+{
+  "name": "bullshit_detector",
+  "version": "4.1.0",
+  "description": "Deadpan bullshit detector for social media captions.",
+  "main": "background.js",
+  "scripts": {
+    "icons": "node scripts/extract-icons.js",
+    "build": "node scripts/build.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xrayian/Bullshit_detector.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/xrayian/Bullshit_detector/issues"
+  },
+  "homepage": "https://github.com/xrayian/Bullshit_detector#readme",
+  "devDependencies": {
+    "heroicons": "^2.2.0"
+  }
+}
