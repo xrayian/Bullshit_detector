@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BS Detector</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="popup-container">
+    <div class="header">
+      <h1 class="title">BS Detector</h1>
+      <p class="subtitle">LinkedIn caption BS detector</p>
+    </div>
+
+    <div id="aiStatus" class="ai-status">
+      <span class="status-dot checking"></span>
+      <span class="status-text" id="statusText">Checking API key...</span>
+    </div>
+
+    <div class="settings-toggle" id="settingsToggle">
+      <span>Settings</span>
+      <span class="arrow" id="settingsArrow">&#9662;</span>
+    </div>
+    <div class="settings-body hidden" id="settingsBody">
+      <label class="setting-label">
+        <span>Gemini API Key</span>
+        <input type="password" id="apiKey" placeholder="AIza..." />
+      </label>
+      <label class="setting-label">
+        <span>Model</span>
+        <input type="text" id="modelName" placeholder="gemini-3.7-flash" />
+      </label>
+      <button id="saveBtn" class="btn btn-save">Save</button>
+      <div id="saveMsg" class="save-msg"></div>
+    </div>
+
+    <button id="scanBtn" class="btn btn-primary" disabled>Scan Captions</button>
+
+    <div class="footer">v3.0.0</div>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>
