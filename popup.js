@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
   const statusDot = document.querySelector(".status-dot");
   const statusText = document.getElementById("statusText");
-  const scanBtn = document.getElementById("scanBtn");
   const settingsToggle = document.getElementById("settingsToggle");
   const settingsBody = document.getElementById("settingsBody");
   const settingsArrow = document.getElementById("settingsArrow");
@@ -39,37 +38,15 @@ document.addEventListener("DOMContentLoaded", async () => {
       if (resp.hasApiKey) {
         statusDot.className = "status-dot ready";
         statusText.textContent = `API ready \u00b7 ${resp.model}`;
-        scanBtn.disabled = false;
       } else {
         statusDot.className = "status-dot error";
         statusText.textContent = "No API key \u2014 open settings";
-        scanBtn.disabled = true;
       }
     } catch {
       statusDot.className = "status-dot error";
       statusText.textContent = "Extension error";
-      scanBtn.disabled = true;
     }
   }
-
-  scanBtn.addEventListener("click", async () => {
-    scanBtn.disabled = true;
-    scanBtn.textContent = "Scanning...";
-    try {
-      const tabs = await chrome.tabs.query({ active: true, currentWindow: true });
-      if (!tabs[0]?.url?.includes("linkedin.com")) {
-        alert("BS Detector only works on LinkedIn.");
-        scanBtn.disabled = false;
-        scanBtn.textContent = "Scan Captions";
-        return;
-      }
-      await chrome.tabs.sendMessage(tabs[0].id, { action: "scanPage" });
-    } catch (err) {
-      alert("BS Detector error:\n\n" + (err.message || "Could not connect to page. Reload LinkedIn and try again."));
-    }
-    scanBtn.disabled = false;
-    scanBtn.textContent = "Scan Captions";
-  });
 
   refreshStatus();
 });
