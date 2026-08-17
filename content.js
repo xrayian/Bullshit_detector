@@ -3,6 +3,7 @@
 
   const PROCESSED = "data-bs-done";
   const MIN_TEXT = 15;
+  const MIN_CAPTION = 80;
   const DEBOUNCE_MS = 200;
 
   // ── Icon library (from heroicons npm package via icons.js) ───
@@ -48,7 +49,7 @@
         '[data-view-name="feed-full-update"]',
         ".feed-shared-update-v2",
         ".occludable-update",
-        'div[componentkey*="FeedType_MAIN_FEED"]',
+        'div[componentkey*="FeedType_MAIN_FEED"]:not([componentkey*="commentsSection"]):not([componentkey*="replaceableComment"]):not([componentkey*="replaceableLoadMoreComments"])',
       ],
       textSelectors: [
         ".feed-shared-inline-show-more-text",
@@ -69,10 +70,17 @@
     },
     facebook: {
       hostPatterns: ["facebook.com"],
-      postSelectors: [],   // TODO: fill when testing
-      textSelectors: [],
-      actionLabels: [],
-      mediaSelectors: [],
+      postSelectors: ['div[role="article"]'],
+      textSelectors: [
+        'div[data-ad-preview="message"]',
+        'div[data-ad-comet-preview="message"]',
+      ],
+      actionLabels: ['like', 'comment'],
+      mediaSelectors: [
+        'div[data-ad-preview="media"]',
+        'video',
+        'img[data-imgperflogname="feedImage"]',
+      ],
     },
     instagram: {
       hostPatterns: ["instagram.com"],
@@ -149,6 +157,32 @@
     return null;
   }
 
+  async function expandSeeMore(card) {
+    for (const btn of card.querySelectorAll('div[role="button"]')) {
+      if (/\bsee more\b/i.test(btn.textContent)) {
+        btn.click();
+        await new Promise((r) => setTimeout(r, 300));
+        return;
+      }
+    }
+  }
+
+  function isInsideCommentsSection(element) {
+    let el = element;
+    for (let i = 0; i < 10 && el; i++) {
+      const ck = el.getAttribute && el.getAttribute("componentkey");
+      const tid = el.getAttribute && el.getAttribute("data-testid");
+      if (
+        (ck && (ck.includes("commentsSection") || ck.includes("replaceableComment") || ck.includes("replaceableLoadMoreComments"))) ||
+        (tid && tid.includes("commentList"))
+      ) {
+        return true;
+      }
+      el = el.parentElement;
+    }
+    return false;
+  }
+
   function findPostContainer(element) {
     for (const sel of siteConfig.postSelectors) {
       const match = element.closest(sel);
@@ -193,14 +227,43 @@
     }
   }
 
+  function findFirstTextNode(root) {
+    const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+    let node;
+    while ((node = walker.nextNode())) {
+      if (node.textContent && node.textContent.trim().length) return node;
+    }
+    return null;
+  }
+
+  function pruneToSinglePath(textEl, keep) {
+    let el = keep;
+    while (el !== textEl && el.parentElement) {
+      const parent = el.parentElement;
+      while (parent.firstChild && parent.firstChild !== el) parent.removeChild(parent.firstChild);
+      while (el.nextSibling) parent.removeChild(el.nextSibling);
+      el = parent;
+    }
+  }
+
+  function replaceCaptionText(textEl, text) {
+    const firstNode = findFirstTextNode(textEl);
+    const anchor = (firstNode && firstNode.parentElement) || textEl;
+    while (anchor.firstChild) anchor.removeChild(anchor.firstChild);
+    anchor.appendChild(document.createTextNode(text));
+    pruneToSinglePath(textEl, anchor);
+  }
+
   // ── Collect captions ──────────────────────────────────────────
 
-  function collectAllCaptions() {
+  async function collectAllCaptions() {
     const captions = [];
     const seen = new Set();
+    const minLen = siteConfig === SITES.facebook ? MIN_CAPTION : MIN_TEXT;
 
     for (const sel of siteConfig.postSelectors) {
       document.querySelectorAll(sel).forEach((el) => {
+        if (isInsideCommentsSection(el)) return;
         const card = findPostContainer(el);
         if (!card || seen.has(card)) return;
         seen.add(card);
@@ -210,9 +273,10 @@
     }
 
     if (siteConfig.actionLabels.length) {
-      document.querySelectorAll("button[aria-label]").forEach((btn) => {
+      document.querySelectorAll('button[aria-label], [role="button"][aria-label]').forEach((btn) => {
         const label = (btn.getAttribute("aria-label") || "").toLowerCase();
         if (!siteConfig.actionLabels.some((l) => label.includes(l))) return;
+        if (isInsideCommentsSection(btn)) return;
         const card = walkUpToCard(btn);
         if (!card || seen.has(card)) return;
         seen.add(card);
@@ -221,7 +285,12 @@
       });
     }
 
-    return captions;
+    for (const c of captions) {
+      await expandSeeMore(c.card);
+      c.text = getCaptionText(c.card);
+    }
+
+    return captions.filter((c) => c.text && c.text.length >= minLen);
   }
 
   // ── Smell Test button ─────────────────────────────────────────
@@ -272,7 +341,14 @@
       if (btn.dataset.state === "rated") {
         const meter = btn.querySelector(".bs-smell-meter");
         if (meter) {
+          const closing = meter.classList.contains("bs-smell-meter-expanded");
           meter.classList.toggle("bs-smell-meter-expanded");
+          const existingIcon = btn.querySelector(".bs-btn-icon");
+          if (closing && !existingIcon) {
+            btn.insertAdjacentHTML("afterbegin", ICONS.gauge);
+          } else if (!closing && existingIcon) {
+            existingIcon.remove();
+          }
         }
         return;
       }
@@ -353,8 +429,8 @@
       e.stopPropagation();
 
       if (btn.dataset.state === "revert") {
-        if (textEl && btn.dataset.original) {
-          textEl.innerText = btn.dataset.original;
+        if (textEl && btn.dataset.originalHTML) {
+          textEl.innerHTML = btn.dataset.originalHTML;
         }
         setNormalizeState(btn, "idle");
         return;
@@ -367,8 +443,8 @@
 
       if (cached) {
         if (textEl) {
-          btn.dataset.original = textEl.innerText;
-          textEl.innerText = cached;
+          btn.dataset.originalHTML = textEl.innerHTML;
+          replaceCaptionText(textEl, cached);
         }
         setNormalizeState(btn, "revert");
         return;
@@ -386,8 +462,8 @@
         cacheResult(hash, null, response.normalized);
 
         if (textEl) {
-          btn.dataset.original = textEl.innerText;
-          textEl.innerText = response.normalized;
+          btn.dataset.originalHTML = textEl.innerHTML;
+          replaceCaptionText(textEl, response.normalized);
         }
         setNormalizeState(btn, "revert");
       } catch (err) {
@@ -487,8 +563,8 @@
 
   let debounceTimer = null;
 
-  function detectAndInject() {
-    const captions = collectAllCaptions();
+  async function detectAndInject() {
+    const captions = await collectAllCaptions();
 
     for (const { card, text } of captions) {
       if (card.getAttribute(PROCESSED)) continue;
