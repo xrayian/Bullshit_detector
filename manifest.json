@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "BS Detector",
-  "version": "4.1.0",
+  "version": "4.2.0",
   "description": "Deadpan bullshit detector for social media captions.",
   "permissions": ["activeTab", "storage"],
   "host_permissions": ["https://generativelanguage.googleapis.com/*"],

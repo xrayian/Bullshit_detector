@@ -70,12 +70,15 @@
     },
     facebook: {
       hostPatterns: ["facebook.com"],
-      postSelectors: ['div[role="article"]'],
+      postSelectors: [
+        '[data-ad-rendering-role="story_message"]',
+      ],
       textSelectors: [
         'div[data-ad-preview="message"]',
         'div[data-ad-comet-preview="message"]',
+        '[data-ad-rendering-role="story_message"]',
       ],
-      actionLabels: ['like', 'comment'],
+      actionLabels: [],
       mediaSelectors: [
         'div[data-ad-preview="media"]',
         'video',

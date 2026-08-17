@@ -14,6 +14,8 @@ BS Detector is a Chrome extension that scans LinkedIn and Facebook post captions
 - **Normalize** — Click again, the fluff gets replaced with one honest sentence.
 - **Revert** — Don't like it? One click to bring the original back.
 
+Only actual post bodies with real captions are targeted — posts and ads from pages, groups, and friends. Reels, comments, and chat threads are left alone.
+
 No accounts. No data collection. Your API key, your machine, your feed.
 
 ## How it works
