@@ -301,6 +301,7 @@
   }
 
   function renderMeter(btn, rating) {
+    btn.classList.remove("bs-smell-loading");
     const bars = RATING_TO_BARS[rating] || 3;
     const meter = document.createElement("span");
     meter.className = "bs-smell-meter bs-smell-meter-expanded";
