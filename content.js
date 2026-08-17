@@ -5,6 +5,35 @@
   const MIN_TEXT = 15;
   const DEBOUNCE_MS = 200;
 
+  // ── Icon library (lucide-style) ───────────────────────────────
+
+  const ICONS = {
+    gauge: '<svg class="bs-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg>',
+    zap: '<svg class="bs-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    undo: '<svg class="bs-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5 5.5 5.5 0 0 1-5.5 5.5H11"/></svg>',
+    loader: '<svg class="bs-btn-icon bs-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>',
+  };
+
+  // ── Theme detection ───────────────────────────────────────────
+
+  function detectTheme() {
+    try {
+      const bg = getComputedStyle(document.body).backgroundColor;
+      if (bg && bg !== "transparent" && bg !== "rgba(0, 0, 0, 0)") {
+        const rgb = bg.match(/\d+/g).slice(0, 3).map(Number);
+        if (rgb.length === 3) {
+          const luminance = (0.299 * rgb[0] + 0.587 * rgb[1] + 0.114 * rgb[2]) / 255;
+          return luminance > 0.5 ? "light" : "dark";
+        }
+      }
+    } catch (e) { /* fall through */ }
+    return matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+  }
+
+  function applyTheme() {
+    document.body.dataset.bsTheme = detectTheme();
+  }
+
   // ── Site configs ──────────────────────────────────────────────
 
   const SITES = {
@@ -210,11 +239,21 @@
     "#ec4899", // pink
   ];
 
+  function setSmellState(btn, state) {
+    btn.dataset.state = state;
+    btn.classList.toggle("bs-smell-loading", state === "loading");
+
+    if (state === "idle") {
+      btn.innerHTML = `${ICONS.gauge}<span class="bs-smell-label">Smell Test</span>`;
+    } else if (state === "loading") {
+      btn.innerHTML = `${ICONS.loader}<span class="bs-smell-label">Analyzing</span>`;
+    }
+  }
+
   function createSmellTestButton(card, text) {
     const btn = document.createElement("button");
     btn.className = "bs-smell-btn";
-    btn.dataset.state = "idle";
-    btn.innerHTML = `<span class="bs-smell-emoji">🔍</span><span class="bs-smell-label">Smell Test</span>`;
+    setSmellState(btn, "idle");
 
     const hash = djb2(text);
     const cached = ratingCache.get(hash);
@@ -233,16 +272,14 @@
         return;
       }
 
-      btn.dataset.state = "loading";
-      btn.classList.add("bs-smell-loading");
+      setSmellState(btn, "loading");
 
       try {
         const response = await chrome.runtime.sendMessage({ action: "ratePost", text });
-        btn.classList.remove("bs-smell-loading");
 
         if (response.error) {
           alert("BS Detector error:\n\n" + response.error);
-          btn.dataset.state = "idle";
+          setSmellState(btn, "idle");
           return;
         }
 
@@ -251,8 +288,7 @@
         btn.dataset.state = "rated";
       } catch (err) {
         alert("BS Detector error:\n\n" + (err.message || "Could not connect."));
-        btn.classList.remove("bs-smell-loading");
-        btn.dataset.state = "idle";
+        setSmellState(btn, "idle");
       }
     });
 
@@ -267,7 +303,7 @@
     let barsHtml = "";
     for (let i = 0; i < 6; i++) {
       const active = i < bars;
-      const color = active ? BAR_COLORS[i] : "#1f2937";
+      const color = active ? BAR_COLORS[i] : "var(--bs-bar-empty)";
       const height = 6 + i * 2;
       barsHtml += `<span class="bs-smell-bar${active ? " active" : ""}" style="height:${height}px;background:${color}"></span>`;
     }
@@ -292,8 +328,7 @@
   function createNormalizeButton(textEl, text) {
     const btn = document.createElement("button");
     btn.className = "bs-normalize-btn";
-    btn.dataset.state = "idle";
-    btn.innerHTML = `<svg class="bs-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Normalize`;
+    setNormalizeState(btn, "idle");
 
     btn.addEventListener("click", async (e) => {
       e.preventDefault();
@@ -349,11 +384,11 @@
   function setNormalizeState(btn, state) {
     btn.dataset.state = state;
     if (state === "idle") {
-      btn.innerHTML = `<svg class="bs-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Normalize`;
+      btn.innerHTML = `${ICONS.zap}Normalize`;
     } else if (state === "loading") {
-      btn.innerHTML = `<span class="bs-spinner"></span>Working...`;
+      btn.innerHTML = `${ICONS.loader}Working...`;
     } else if (state === "revert") {
-      btn.innerHTML = `<svg class="bs-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>Revert`;
+      btn.innerHTML = `${ICONS.undo}Revert`;
     }
   }
 
@@ -404,6 +439,7 @@
 
     const badge = document.createElement("div");
     badge.className = "bs-badge";
+    badge.style.borderLeftColor = color;
     badge.innerHTML = `
       <span class="bs-dot" style="background:${color}"></span>
       <span class="bs-rating-text">${data.rating || "???"}</span>
@@ -453,6 +489,9 @@
   }
 
   // ── Init ──────────────────────────────────────────────────────
+
+  applyTheme();
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", applyTheme);
 
   loadCache().then(() => {
     detectAndInject();

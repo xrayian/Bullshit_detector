@@ -3,14 +3,37 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BS Detector — LinkedIn Caption BS Detector</title>
+  <title>BS Detector — Social Media BS Detector</title>
   <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #0a0a0f;
+      --text: #e4e4e7;
+      --muted: #71717a;
+      --step-bg: rgba(255, 255, 255, 0.02);
+      --step-border: rgba(255, 255, 255, 0.06);
+      --footer: #27272a;
+      --footer-link: #52525b;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg: #fafafa;
+        --text: #18181b;
+        --muted: #52525b;
+        --step-bg: #ffffff;
+        --step-border: rgba(15, 15, 25, 0.1);
+        --footer: #d4d4d8;
+        --footer-link: #71717a;
+      }
+    }
+
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #0a0a0f;
-      color: #e4e4e7;
+      background: var(--bg);
+      color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
@@ -46,7 +69,7 @@
 
     .tagline {
       font-size: 17px;
-      color: #71717a;
+      color: var(--muted);
       max-width: 440px;
       line-height: 1.5;
       margin-bottom: 36px;
@@ -92,10 +115,17 @@
       flex: 1;
       min-width: 160px;
       padding: 20px;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      background: var(--step-bg);
+      border: 1px solid var(--step-border);
       border-radius: 12px;
       text-align: left;
+    }
+
+    .step-icon {
+      width: 22px;
+      height: 22px;
+      color: #ef4444;
+      margin-bottom: 10px;
     }
 
     .step-num {
@@ -109,21 +139,21 @@
 
     .step-text {
       font-size: 14px;
-      color: #a1a1aa;
+      color: var(--muted);
       line-height: 1.4;
     }
 
     .footer {
       margin-top: 64px;
       font-size: 12px;
-      color: #27272a;
+      color: var(--footer);
       display: flex;
       align-items: center;
       gap: 16px;
     }
 
     .footer a {
-      color: #52525b;
+      color: var(--footer-link);
       text-decoration: none;
       transition: color 0.2s;
     }
@@ -145,32 +175,51 @@
   <h1><span class="red">BS</span> Detector</h1>
 
   <p class="tagline">
-    Replaces LinkedIn corporate speak with what people actually mean.
+    Replaces social media corporate speak with what people actually mean.
     One click. Deadpan honesty. No emojis.
   </p>
 
   <a href="https://github.com/xrayian/Bullshit_detector" class="cta" target="_blank" rel="noopener">
-    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+    <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 4.6 3 8.51 7.16 9.91.52.09.71-.23.71-.5v-1.77c-2.91.63-3.53-1.4-3.53-1.4-.48-1.21-1.16-1.53-1.16-1.53-.95-.65.07-.63.07-.63 1.05.07 1.6 1.08 1.6 1.08.93 1.59 2.44 1.13 3.04.87.09-.68.36-1.13.66-1.4-2.3-.26-4.73-1.15-4.73-5.13 0-1.13.4-2.06 1.06-2.78-.11-.26-.46-1.31.1-2.74 0 0 .87-.28 2.84 1.06a9.9 9.9 0 0 1 5.16 0c1.97-1.34 2.84-1.06 2.84-1.06.56 1.43.21 2.48.1 2.74.66.72 1.06 1.65 1.06 2.78 0 3.99-2.44 4.87-4.76 5.12.37.32.71.96.71 1.94v2.88c0 .28.19.6.72.5A10.04 10.04 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
     View on GitHub
   </a>
 
   <div class="how">
     <div class="step">
+      <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4"/>
+        <path d="m21 2-9.6 9.6"/>
+        <circle cx="7.5" cy="15.5" r="5.5"/>
+      </svg>
       <div class="step-num">01</div>
       <div class="step-text">Load the extension in Chrome. Add your Gemini API key.</div>
     </div>
     <div class="step">
+      <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m12 14 4-4"/>
+        <path d="M3.34 19a10 10 0 1 1 17.32 0"/>
+      </svg>
       <div class="step-num">02</div>
-      <div class="step-text">Open LinkedIn. Click Scan Captions. Get instant ratings.</div>
+      <div class="step-text">Open LinkedIn. Controls appear automatically on every post.</div>
     </div>
     <div class="step">
+      <svg class="step-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="m21.64 3.64-1.28-1.28a1.21 1.21 0 0 0-1.72 0L2.36 18.64a1.21 1.21 0 0 0 0 1.72l1.28 1.28a1.2 1.2 0 0 0 1.72 0L21.64 5.36a1.2 1.2 0 0 0 0-1.72"/>
+        <path d="m14 7 3 3"/>
+        <path d="M5 6v4"/>
+        <path d="M19 14v4"/>
+        <path d="M10 2v2"/>
+        <path d="M7 8H3"/>
+        <path d="M21 16h-4"/>
+        <path d="M11 3H9"/>
+      </svg>
       <div class="step-num">03</div>
       <div class="step-text">Hit Normalize. The fluff gets replaced with one honest sentence.</div>
     </div>
   </div>
 
   <div class="footer">
-    <span>v4.0.0</span>
+    <span>v4.1.0</span>
     <a href="https://github.com/xrayian/Bullshit_detector" target="_blank" rel="noopener">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
       GitHub

@@ -1,18 +1,59 @@
+/* ══════════════════════════════════════════════════════════════
+   BS Detector — in-page styles
+   Dark is the default; light overrides via body[data-bs-theme="light"]
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Design tokens (dark) ─────────────────────────────────────── */
+
+.bs-controls,
+.bs-badge,
+.bs-smell-btn,
+.bs-normalize-btn,
+.bs-smell-tooltip,
+.bs-tooltip {
+  --bs-surface: rgba(15, 15, 25, 0.85);
+  --bs-border: rgba(255, 255, 255, 0.1);
+  --bs-text: #e4e4e7;
+  --bs-muted: #71717a;
+  --bs-accent: #6366f1;
+  --bs-accent-hover: #4f46e5;
+  --bs-bar-empty: #1f2937;
+  --bs-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+body[data-bs-theme="light"] .bs-controls,
+body[data-bs-theme="light"] .bs-badge,
+body[data-bs-theme="light"] .bs-smell-btn,
+body[data-bs-theme="light"] .bs-normalize-btn,
+body[data-bs-theme="light"] .bs-smell-tooltip,
+body[data-bs-theme="light"] .bs-tooltip {
+  --bs-surface: rgba(255, 255, 255, 0.95);
+  --bs-border: rgba(15, 15, 25, 0.12);
+  --bs-text: #18181b;
+  --bs-muted: #52525b;
+  --bs-accent: #4f46e5;
+  --bs-accent-hover: #4338ca;
+  --bs-bar-empty: #d4d4d8;
+  --bs-shadow: 0 1px 4px rgba(15, 15, 25, 0.12);
+}
+
 /* ── Controls container ───────────────────────────────────────── */
 
 .bs-controls {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   margin-top: 8px;
-  padding: 6px 10px;
-  border-radius: 10px;
-  background: rgba(15, 15, 25, 0.6);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  padding: 5px 8px;
+  border-radius: 12px;
+  background: var(--bs-surface);
+  border: 1px solid var(--bs-border);
+  color: var(--bs-text);
   z-index: 99998;
   position: relative;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
+  box-shadow: var(--bs-shadow);
 }
 
 /* ── Badge ────────────────────────────────────────────────────── */
@@ -27,22 +68,23 @@
   font-weight: 600;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   border-radius: 12px;
-  background: rgba(15, 15, 25, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #e4e4e7;
+  background: var(--bs-surface);
+  border: 1px solid var(--bs-border);
+  border-left: 3px solid #6b7280;
+  color: var(--bs-text);
   cursor: default;
   z-index: 99999;
   position: relative;
   white-space: nowrap;
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  transition: all 0.15s ease;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: var(--bs-shadow);
 }
 
 .bs-badge:hover {
-  border-color: rgba(255, 255, 255, 0.15);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+  border-color: var(--bs-border);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
 .bs-dot {
@@ -63,28 +105,35 @@
   line-height: 1;
 }
 
-.bs-tooltip {
+/* ── Tooltips ─────────────────────────────────────────────────── */
+
+.bs-tooltip,
+.bs-smell-tooltip {
   display: none;
   position: absolute;
   bottom: calc(100% + 8px);
   left: 0;
-  min-width: 220px;
-  max-width: 340px;
-  padding: 10px 14px;
-  background: rgba(15, 15, 25, 0.97);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 200px;
+  max-width: 320px;
+  padding: 8px 12px;
+  background: var(--bs-surface);
+  border: 1px solid var(--bs-border);
   border-radius: 10px;
-  color: #d4d4d8;
-  font-size: 12px;
+  color: var(--bs-text);
+  font-size: 11px;
   font-weight: 400;
   line-height: 1.4;
   letter-spacing: 0;
   z-index: 999999;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   pointer-events: none;
+  white-space: normal;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
-.bs-badge:hover .bs-tooltip {
+.bs-badge:hover .bs-tooltip,
+.bs-smell-btn:hover .bs-smell-tooltip {
   display: block;
 }
 
@@ -95,51 +144,55 @@
   align-items: center;
   gap: 5px;
   padding: 4px 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--bs-border);
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.04);
-  color: #a1a1aa;
+  background: transparent;
+  color: var(--bs-text);
   font-size: 11px;
   font-weight: 500;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.15s ease, border-color 0.15s ease;
   position: relative;
   white-space: nowrap;
 }
 
 .bs-smell-btn:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.15);
-  color: #d4d4d8;
+  background: rgba(128, 128, 128, 0.12);
+  border-color: var(--bs-border);
 }
 
-.bs-smell-emoji {
-  font-size: 14px;
-  line-height: 1;
+.bs-smell-btn .bs-btn-icon {
+  width: 13px;
+  height: 13px;
 }
 
 .bs-smell-label {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.3px;
-  color: #71717a;
+  color: var(--bs-muted);
+}
+
+.bs-smell-btn:focus-visible,
+.bs-normalize-btn:focus-visible {
+  outline: 2px solid var(--bs-accent);
+  outline-offset: 2px;
 }
 
 /* ── Smell Test loading ───────────────────────────────────────── */
 
 .bs-smell-loading {
-  opacity: 0.6;
+  opacity: 0.65;
   cursor: wait;
 }
 
-.bs-smell-loading .bs-smell-emoji {
-  animation: bs-smell-spin 0.8s linear infinite;
+.bs-spin {
+  animation: bs-rotate 0.9s linear infinite;
 }
 
-@keyframes bs-smell-spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+@keyframes bs-rotate {
+  to { transform: rotate(360deg); }
 }
 
 /* ── Smell Test meter ─────────────────────────────────────────── */
@@ -168,34 +221,7 @@
 }
 
 .bs-smell-bar.active {
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-}
-
-/* ── Smell Test tooltip ───────────────────────────────────────── */
-
-.bs-smell-tooltip {
-  display: none;
-  position: absolute;
-  bottom: calc(100% + 8px);
-  left: 0;
-  min-width: 200px;
-  max-width: 320px;
-  padding: 8px 12px;
-  background: rgba(15, 15, 25, 0.97);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  color: #d4d4d8;
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 1.4;
-  z-index: 999999;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
-  pointer-events: none;
-  white-space: normal;
-}
-
-.bs-smell-btn:hover .bs-smell-tooltip {
-  display: block;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.2);
 }
 
 /* ── Normalize button ─────────────────────────────────────────── */
@@ -204,24 +230,24 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 5px 14px;
+  padding: 5px 12px;
   font-size: 11px;
   font-weight: 600;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  border-radius: 14px;
+  border-radius: 10px;
   border: none;
-  background: #6366f1;
+  background: var(--bs-accent);
   color: #fff;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
   white-space: nowrap;
-  box-shadow: 0 1px 4px rgba(99, 102, 241, 0.3);
+  box-shadow: 0 1px 4px rgba(79, 70, 229, 0.35);
 }
 
 .bs-normalize-btn:hover {
-  background: #4f46e5;
+  background: var(--bs-accent-hover);
   transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(99, 102, 241, 0.4);
+  box-shadow: 0 2px 8px rgba(79, 70, 229, 0.4);
 }
 
 .bs-normalize-btn:active {
@@ -229,14 +255,15 @@
 }
 
 .bs-normalize-btn[data-state="revert"] {
-  background: #374151;
-  color: #d1d5db;
+  background: transparent;
+  color: var(--bs-muted);
+  border: 1px solid var(--bs-border);
   box-shadow: none;
 }
 
 .bs-normalize-btn[data-state="revert"]:hover {
-  background: #4b5563;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  background: rgba(128, 128, 128, 0.12);
+  color: var(--bs-text);
 }
 
 .bs-normalize-btn[data-state="loading"] {
@@ -250,18 +277,14 @@
   flex-shrink: 0;
 }
 
-/* ── Spinner ──────────────────────────────────────────────────── */
+/* ── Reduced motion ───────────────────────────────────────────── */
 
-.bs-spinner {
-  display: inline-block;
-  width: 12px;
-  height: 12px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: bs-spin 0.6s linear infinite;
-}
-
-@keyframes bs-spin {
-  to { transform: rotate(360deg); }
+@media (prefers-reduced-motion: reduce) {
+  .bs-dot,
+  .bs-spin,
+  .bs-smell-bar,
+  .bs-smell-meter {
+    animation: none !important;
+    transition: none !important;
+  }
 }
