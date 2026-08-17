@@ -317,13 +317,25 @@
     btn.innerHTML = "";
     btn.appendChild(meter);
 
-    // tooltip with one-liner
+    // tooltip with one-liner + rating
     const hash = djb2(btn.closest("[data-bs-caption]")?.dataset.bsCaption || "");
     const cached = ratingCache.get(hash);
-    if (cached?.oneLiner) {
-      const tip = document.createElement("span");
+    if (cached) {
+      const tip = document.createElement("div");
       tip.className = "bs-smell-tooltip";
-      tip.textContent = cached.oneLiner;
+
+      const text = document.createElement("span");
+      text.className = "bs-smell-tooltip-text";
+      text.textContent = cached.oneLiner || "No roast available.";
+
+      const ratingLine = document.createElement("span");
+      ratingLine.className = "bs-smell-tooltip-rating";
+      const barCount = RATING_TO_BARS[cached.rating] || 0;
+      ratingLine.style.color = barCount > 0 ? BAR_COLORS[barCount - 1] : "var(--bs-muted)";
+      ratingLine.textContent = `RATING: ${cached.rating || "Unknown"}`;
+
+      tip.appendChild(text);
+      tip.appendChild(ratingLine);
       btn.appendChild(tip);
     }
   }

@@ -12,6 +12,7 @@
 .bs-smell-tooltip,
 .bs-tooltip {
   --bs-surface: rgba(15, 15, 25, 0.85);
+  --bs-tooltip-bg: #12121c;
   --bs-border: rgba(255, 255, 255, 0.1);
   --bs-text: #e4e4e7;
   --bs-muted: #71717a;
@@ -28,6 +29,7 @@ body[data-bs-theme="light"] .bs-normalize-btn,
 body[data-bs-theme="light"] .bs-smell-tooltip,
 body[data-bs-theme="light"] .bs-tooltip {
   --bs-surface: rgba(255, 255, 255, 0.95);
+  --bs-tooltip-bg: #ffffff;
   --bs-border: rgba(15, 15, 25, 0.12);
   --bs-text: #18181b;
   --bs-muted: #52525b;
@@ -116,7 +118,7 @@ body[data-bs-theme="light"] .bs-tooltip {
   min-width: 200px;
   max-width: 320px;
   padding: 8px 12px;
-  background: var(--bs-surface);
+  background: var(--bs-tooltip-bg);
   border: 1px solid var(--bs-border);
   border-radius: 10px;
   color: var(--bs-text);
@@ -128,13 +130,26 @@ body[data-bs-theme="light"] .bs-tooltip {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   pointer-events: none;
   white-space: normal;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 
 .bs-badge:hover .bs-tooltip,
 .bs-smell-btn:hover .bs-smell-tooltip {
   display: block;
+}
+
+.bs-smell-tooltip-text {
+  display: block;
+}
+
+.bs-smell-tooltip-rating {
+  display: block;
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid var(--bs-border);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 /* ── Smell Test button ────────────────────────────────────────── */
